@@ -5,6 +5,7 @@ import validator from "validator";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./ToDo.css";
+
 let Token = localStorage.getItem("token");
 import { SlOptionsVertical } from "react-icons/sl";
 
@@ -18,7 +19,6 @@ function ToDoList() {
   const [taskErr, settask] = useState(false);
   const [durErr, setDuration] = useState(false);
   const [data, setdata] = useState([]);
-//   const [Task,setTask]=useState("")
 
   let task = useRef();
   let description = useRef();
@@ -33,15 +33,16 @@ function ToDoList() {
 
   //   }
   const todo = async () => {
+    
     try {
-      const response = await axios.get("http://localhost:3000/task/todopages", {
-        headers: {
-          authorization: `${Token}`,
-        },
-      });
-      console.log(response, "response");
-      setdata(response.data.todoAllData);
-      console.log(response.data.todoAllData, "============");
+    const response = await axios.get("http://localhost:3000/task/todopages", {
+      headers: {
+        authorization: `${Token}`,
+      },
+    });
+    console.log(response, "response");
+    setdata(response.data.todoAllData);
+    console.log(response.data.todoAllData, "============");
     } catch (err) {
       console.log(err.message);
     }
@@ -50,6 +51,7 @@ function ToDoList() {
   useEffect(() => {
     todo();
   }, []);
+
   const formsubmit = async (e) => {
     e.preventDefault();
     try {
@@ -74,8 +76,8 @@ function ToDoList() {
         )
         .then((response) => {
           console.log(response, "hhhhhh");
-          alert("Todo add succsessfully");
-            todo();
+          alert("Todo Data Add successfully");
+          todo();
           //   setdata(response, { task, description, duration, email });
           //   console.log(data,"=============");
           //   navigate("/home");
@@ -87,6 +89,7 @@ function ToDoList() {
       console.log(err.message, "error");
     }
   };
+
   function emailHandle() {
     if (!validator.isEmail(email.current.value)) {
       setemailerr(true);
@@ -125,38 +128,80 @@ function ToDoList() {
     }
   }
 
-//   function clearFeild(){
-//     setTask("")
-//   }
-//   function getalldata() {
-//     let response = axios
-//       .get("http://localhost:3000/task/todopages", {
-//         headers: {
-//           authorization: localStorage.getItem("token"),
-//         },
-//       })
-//       //   console.log(response,"response")
-//       .then((response) => {
-//         console.log(response);
-//       })
-//       .catch((error) => {
-//         console.log(error, "catch error");
-//       });
-//   }
+  const deletetodo = async (id) => {
+    if (id) {
+      try {
+        let response = await axios
+          .delete(`http://localhost:3000/task/todopage/${id}`, {
+            headers: {
+              authorization: `${Token}`,
+            },
+          })
+          .then((response) => {
+            console.log(response, "hhhhhh");
+            confirm("ToDo Data Delete successfully ");
+            todo();
+          })
+          .catch((error) => {
+            console.log(error, "catch error");
+          });
+      } catch (err) {
+        console.log(err.message, "error");
+      }
+    }
+  };
 
+  //   const updatetodo = async () => {
+  //     if(id){
+  //       try {
+  //         let response = await axios
+  //           .put(
+  //             `http://localhost:3000/task/todo_update/${id}`,
+  //             {
+  //               task: task.current.value,
+  //               description: description.current.value,
+  //               duration: duration.current.value,
+  //             email: email.current.value,
+  //             },
+  //             {
+  //               headers: {
+  //                 authorization: `${Token}`,
+  //               },
+  //             }
+  //           )
+  //           .then((response) => {
+  //             console.log(response, "hhhhhh");
+  //             // confirm("ToDo Data Update successfully");
+  //             // todo()
+  //           })
+  //           .catch((error) => {
+  //             console.log(error, "catch error");
+  //           });
+  //       } catch (err) {
+  //         console.log(err.message, "error");
+  //       }
+  //     }
+  //   };
+  //   function clearfeild(e){
+  //     e.preventDefault();
+  //     setDes("")
+  //     setDuration("")
+  //     settask("")
+  //     setemailerr("")
+  //   }
   return (
     <>
       <div className="container-todo">
         <div className="form-container-todo">
           <h2>To Do List</h2>
-          <form onSubmit={formsubmit}>
+          <form>
             <div className="form-control-todo">
               <div>
                 <input
                   ref={task}
                   type="text"
                   placeholder="enter task"
-                  onChange={taskHandle }
+                  onChange={taskHandle}
                   required
                 ></input>
                 {taskErr ? (
@@ -210,13 +255,13 @@ function ToDoList() {
               </div>
             </div>
             <div className="buttonstyle">
-              <button>Add</button>
+              <button onClick={formsubmit}>Add</button>
               <button>clear</button>
               <button>Update</button>
             </div>
           </form>
         </div>
-
+        {/* <button onClick={deletetodo}>delete</button> */}
         {/* <button onClick={getalldata}>get data</button> */}
       </div>
       <div className="container-table">
@@ -247,9 +292,19 @@ function ToDoList() {
                     <td>{todo.duration}</td>
                     <td>{todo.username}</td>
                     <td>
-                      <button className="danger"> Delete</button>
+                      <button
+                        className="danger"
+                        onClick={() => {
+                          deletetodo(todo.id);
+                        }}
+                      >
+                        {" "}
+                        Delete
+                      </button>
                     </td>
-                    <td><SlOptionsVertical></SlOptionsVertical></td>
+                    <td>
+                      <SlOptionsVertical></SlOptionsVertical>
+                    </td>
                   </tr>
                 );
               })}
