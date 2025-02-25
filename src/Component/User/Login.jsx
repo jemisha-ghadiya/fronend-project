@@ -33,13 +33,13 @@ function Login() {
         })
         .then((response) => {
           console.log(response, "hhhhhh");
+          alert("Login successfully");
           const token = response.data.token;
           console.log(token);
           const id = response.data.user.id;
           console.log(id, "token id ");
           localStorage.setItem("token", token);
           localStorage.setItem("id", id);
-          
           navigate("/task/todopage");
         })
         .catch((error) => {

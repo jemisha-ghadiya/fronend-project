@@ -3,13 +3,38 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import "./navbar.css";
-
+import { useNavigate } from "react-router-dom";
+let Token = localStorage.getItem("token");
 function Navigation() {
+  const navigate = useNavigate();
   const menus = ["My Profile", "Change password", "logout"];
   const [open, setopen] = useState(false);
   const menuref = useRef();
 
+  const Logout = async () => {
+    try {
+      let id = localStorage.getItem("id");
+      console.log(id, "token id");
+      let response = await axios
+        .delete(`http://localhost:3000/user/user/${id}`, {
+          headers: {
+            authorization: `${Token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response, "hhhhhh");
+          alert("User Logout successfully");
+          navigate("/home");
+        })
+        .catch((error) => {
+          console.log(error, "catch error");
+        });
+    } catch (err) {
+      console.log(err.message, "error");
+    }
+  };
   return (
     <div className="navbar">
       <h1>
@@ -36,7 +61,7 @@ function Navigation() {
               <li>Change password</li>
             </Link>
             <Link className="popli">
-              <li>Logout</li>
+              <li onClick={Logout}>Logout</li>
             </Link>
           </ul>
         </div>

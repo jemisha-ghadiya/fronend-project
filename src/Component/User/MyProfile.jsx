@@ -90,8 +90,8 @@ function Myprofile() {
           </div>
 
           <div className="buttonstyle">
-            <button>Update</button>
-            <button>Delete</button>
+            <button>Update Profile</button>
+            {/* <button>Delete</button> */}
           </div>
           {/* onClick={()=>navigate('/login')} */}
         </form>

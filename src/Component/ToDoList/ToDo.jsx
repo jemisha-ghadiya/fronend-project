@@ -3,22 +3,31 @@ import { useState } from "react";
 import { useRef } from "react";
 import validator from "validator";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import "./ToDo.css";
+import { RiDeleteBin5Fill } from "react-icons/ri";
 
-let Token = localStorage.getItem("token");
 import { SlOptionsVertical } from "react-icons/sl";
-
+let Token = localStorage.getItem("token");
 // console.log("Token----------", Token);
 // let id = localStorage.getItem("id");
 
 function ToDoList() {
-  let navigate = useNavigate();
+  // const { id } = useParams();
+  //   let navigate = useNavigate();
   const [emailerr, setemailerr] = useState(false);
   const [descErr, setDes] = useState(false);
   const [taskErr, settask] = useState(false);
   const [durErr, setDuration] = useState(false);
   const [data, setdata] = useState([]);
+  const [tasks, settasks] = useState("");
+  const [desc, setdesc] = useState("");
+  const [dur, setdur] = useState("");
+  const [username, setusername] = useState("");
+  const [status, setstatus] = useState(false);
+  const [Todoid, setid] = useState(null);
 
   let task = useRef();
   let description = useRef();
@@ -32,32 +41,35 @@ function ToDoList() {
   //     console.log(email.current.value);
 
   //   }
+  useEffect(() => {
+    todo();
+  }, []);
   const todo = async () => {
-    
     try {
-    const response = await axios.get("http://localhost:3000/task/todopages", {
-      headers: {
-        authorization: `${Token}`,
-      },
-    });
-    console.log(response, "response");
-    setdata(response.data.todoAllData);
-    console.log(response.data.todoAllData, "============");
+      const response = await axios
+        .get("http://localhost:3000/task/todopages", {
+          headers: {
+            authorization: `${Token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response, "response");
+          setdata(response.data.todoAllData);
+          // console.log(response.data.todoAllData, "============");
+        })
+        .catch((error) => {
+          console.log(error, "catch error");
+        });
     } catch (err) {
       console.log(err.message);
     }
   };
-
-  useEffect(() => {
-    todo();
-  }, []);
-
   const formsubmit = async (e) => {
     e.preventDefault();
     try {
-      let id = localStorage.getItem("id");
-      console.log(id, "token id");
-      console.log("token----------------", Token);
+      //   let id = localStorage.getItem("id");
+      //   console.log(id, "token id");
+      //   console.log("token----------------", Token);
 
       const response = await axios
         .post(
@@ -130,6 +142,7 @@ function ToDoList() {
 
   const deletetodo = async (id) => {
     if (id) {
+      // confirm("ToDo Data Delete successfully ");
       try {
         let response = await axios
           .delete(`http://localhost:3000/task/todopage/${id}`, {
@@ -139,7 +152,6 @@ function ToDoList() {
           })
           .then((response) => {
             console.log(response, "hhhhhh");
-            confirm("ToDo Data Delete successfully ");
             todo();
           })
           .catch((error) => {
@@ -151,44 +163,70 @@ function ToDoList() {
     }
   };
 
-  //   const updatetodo = async () => {
-  //     if(id){
-  //       try {
-  //         let response = await axios
-  //           .put(
-  //             `http://localhost:3000/task/todo_update/${id}`,
-  //             {
-  //               task: task.current.value,
-  //               description: description.current.value,
-  //               duration: duration.current.value,
-  //             email: email.current.value,
-  //             },
-  //             {
-  //               headers: {
-  //                 authorization: `${Token}`,
-  //               },
-  //             }
-  //           )
-  //           .then((response) => {
-  //             console.log(response, "hhhhhh");
-  //             // confirm("ToDo Data Update successfully");
-  //             // todo()
-  //           })
-  //           .catch((error) => {
-  //             console.log(error, "catch error");
-  //           });
-  //       } catch (err) {
-  //         console.log(err.message, "error");
-  //       }
-  //     }
-  //   };
+  const showTodo = async (id) => {
+    try {
+      const response = await axios
+        .get(`http://localhost:3000/task/todo/${id}`, {
+          headers: {
+            authorization: `${Token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response, "response");
+          settasks(response.data.todoAllData[0].task);
+          setdesc(response.data.todoAllData[0].description);
+          setdur(response.data.todoAllData[0].duration);
+          setusername(response.data.todoAllData[0].username);
+          setid(response.data.todoAllData[0].id);
+          setstatus(true);
+          //   setdata(response.data.todoAllData);
+          // console.log(response.data.todoAllData, "============");
+        })
+        .catch((error) => {
+          console.log(error, "catch error");
+        });
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+    const updatetodo = async () => {
+      try {
+        let response = await axios
+          .put(
+            `http://localhost:3000/task/todo_update/${Todoid}`,
+            {
+              task: task.current.value,
+              description: description.current.value,
+              duration: duration.current.value,
+              email: email.current.value,
+            },
+            {
+              headers: {
+                authorization: `${Token}`,
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response, "hhhhhh");
+
+            // todo()
+          })
+          .catch((error) => {
+            console.log(error, "catch error");
+          });
+      } catch (err) {
+        console.log(err.message, "error");
+      }
+    };
   //   function clearfeild(e){
   //     e.preventDefault();
   //     setDes("")
   //     setDuration("")
   //     settask("")
   //     setemailerr("")
+
   //   }
+
   return (
     <>
       <div className="container-todo">
@@ -201,7 +239,8 @@ function ToDoList() {
                   ref={task}
                   type="text"
                   placeholder="enter task"
-                  onChange={taskHandle}
+                  defaultValue={tasks}
+                  onChange={(e) => settasks(e.target.value)}
                   required
                 ></input>
                 {taskErr ? (
@@ -216,7 +255,8 @@ function ToDoList() {
                   ref={description}
                   type="text"
                   placeholder="enter description"
-                  onChange={DescHandle}
+                  defaultValue={desc}
+                  onChange={(e) => setdesc(e.target.value)}
                   required
                 ></input>
                 {descErr ? (
@@ -232,7 +272,8 @@ function ToDoList() {
                   ref={duration}
                   type="text"
                   placeholder="enter duration"
-                  onChange={DurHandle}
+                  defaultValue={dur}
+                  onChange={(e) => setdur(e.target.value)}
                   required
                 ></input>
                 {durErr ? (
@@ -248,17 +289,26 @@ function ToDoList() {
                   ref={email}
                   type="email"
                   placeholder="enter email"
-                  onChange={emailHandle}
+                  defaultValue={username}
+                  onChange={(e) => setusername(e.target.value)}
                   required
                 ></input>
                 {emailerr ? <span>enter valid email format</span> : ""}
               </div>
             </div>
             <div className="buttonstyle">
-              <button onClick={formsubmit}>Add</button>
+              {status ? (
+                <button onClick={updatetodo}>Edit</button>
+              ) : (
+                <button onClick={formsubmit}>Add</button>
+              )}
               <button>clear</button>
-              <button>Update</button>
+              {/* <button onClick={updatetodo}>Update</button> */}
             </div>
+            {/* <div> <select name="">
+                            <option>Update</option>
+                            <option>Another update</option>
+                        </select></div> */}
           </form>
         </div>
         {/* <button onClick={deletetodo}>delete</button> */}
@@ -295,15 +345,28 @@ function ToDoList() {
                       <button
                         className="danger"
                         onClick={() => {
-                          deletetodo(todo.id);
+                          if (window.confirm("ToDo Data Delete successfully")) {
+                            deletetodo(todo.id);
+                          }
                         }}
                       >
-                        {" "}
-                        Delete
+                        <RiDeleteBin5Fill />
                       </button>
                     </td>
                     <td>
-                      <SlOptionsVertical></SlOptionsVertical>
+                      <button
+                        style={{ borderRadius: "20px", padding: "5px" }}
+                        onClick={() => {
+                          showTodo(todo.id);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      {/* <SlOptionsVertical></SlOptionsVertical> */}
+                      <Link to={`/task/todo_update/${todo.id}`}>
+                        {" "}
+                        <button className="edit"> Update</button>
+                      </Link>
                     </td>
                   </tr>
                 );

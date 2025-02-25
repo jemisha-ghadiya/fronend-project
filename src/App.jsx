@@ -13,6 +13,7 @@ import ToDoList from './Component/ToDoList/ToDo';
 // import TodoAdd from './Component/ToDoList/TodoAdd';
 import Myprofile from './Component/User/MyProfile';
 import Home from './Component/User/Home'
+import ToDoUpdate from './Component/ToDoList/ToDoUpdate';
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
       <Route path="/user/login" element={<Login></Login>}></Route>
       <Route path="/task/todopage" element={<ToDoList/>}></Route>
       <Route path="/user/:id" element={<Myprofile/>}></Route>
+      <Route path="/task/todo_update/:id" element={<ToDoUpdate/>}></Route>
     </Routes>
     </BrowserRouter>
     </>

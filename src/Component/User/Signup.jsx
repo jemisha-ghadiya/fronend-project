@@ -7,6 +7,8 @@ import validator from "validator";
 import { Link } from "react-router-dom";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
+// import signupRoute from '../../api/user/index.js'
+
 // import { NavLink } from "react-router-dom";
 import Navigation from "./navbar";
 import { useRef } from "react";
@@ -17,6 +19,7 @@ function Signup() {
   const [passerr, setpasserr] = useState(false);
   const [emailerr, setemailerr] = useState(false);
   const navigate = useNavigate();
+
   const formsubmit = async (e) => {
     e.preventDefault();
     try {
@@ -75,7 +78,8 @@ function Signup() {
               type="text"
               placeholder="enter your email"
               onChange={emailHandle}
-            required></input>
+              required
+            ></input>
             {emailerr ? <span>enter valid email format</span> : ""}
             <MdOutlineMail className="icon email"></MdOutlineMail>
           </div>
@@ -85,7 +89,8 @@ function Signup() {
               type={show ? "text" : "password"}
               placeholder="enter your password"
               onChange={passHandle}
-            required/>
+              required
+            />
             {show ? (
               <BiShow className="icon1 hide" onClick={showpassword}></BiShow>
             ) : (
@@ -94,7 +99,9 @@ function Signup() {
             {passerr ? <span>please enter the 6 character password</span> : ""}
             <RiLockPasswordLine className="icon password"></RiLockPasswordLine>
           </div>
-          <div className="buttonstyle"><button >SignUp</button></div>
+          <div className="buttonstyle">
+            <button>SignUp</button>
+          </div>
           {/* onClick={()=>navigate('/login')} */}
         </form>
         <p>

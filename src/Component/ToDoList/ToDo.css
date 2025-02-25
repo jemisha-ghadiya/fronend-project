@@ -125,6 +125,11 @@ td {
 .danger{
     background-color: red;
     font-style: white;
-    padding: 9px;
+    padding: 5px;
+    border-radius: 20px;
+}
+.edit{
+    font-style: white;
+    padding: 5px;
     border-radius: 20px;
 }
