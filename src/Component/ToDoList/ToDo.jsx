@@ -5,9 +5,16 @@ import validator from "validator";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 // import { useNavigate } from "react-router-dom";
 import "./ToDo.css";
 import { RiDeleteBin5Fill } from "react-icons/ri";
+
+import { Todocreate } from "../../api/todo";
+import { Todoget } from "../../api/todo";
+import { TodoDelete } from "../../api/todo";
+import { Todoput } from "../../api/todo";
+import { Todogetbyid } from "../../api/todo";
 
 import { SlOptionsVertical } from "react-icons/sl";
 let Token = localStorage.getItem("token");
@@ -28,6 +35,7 @@ function ToDoList() {
   const [username, setusername] = useState("");
   const [status, setstatus] = useState(false);
   const [Todoid, setid] = useState(null);
+  const [hideButton, setHidebutton] = useState(false);
 
   let task = useRef();
   let description = useRef();
@@ -46,12 +54,11 @@ function ToDoList() {
   }, []);
   const todo = async () => {
     try {
-      const response = await axios
-        .get("http://localhost:3000/task/todopages", {
-          headers: {
-            authorization: `${Token}`,
-          },
-        })
+      const response = await Todoget({
+        headers: {
+          authorization: `${Token}`,
+        },
+      })
         .then((response) => {
           console.log(response, "response");
           setdata(response.data.todoAllData);
@@ -64,6 +71,19 @@ function ToDoList() {
       console.log(err.message);
     }
   };
+
+  function ButtonHide() {
+    if (tasks || desc || dur || username) {
+      setHidebutton(true);
+    } else {
+      setHidebutton(false);
+    }
+  }
+
+  useEffect(() => {
+    ButtonHide();
+  });
+
   const formsubmit = async (e) => {
     e.preventDefault();
     try {
@@ -71,24 +91,22 @@ function ToDoList() {
       //   console.log(id, "token id");
       //   console.log("token----------------", Token);
 
-      const response = await axios
-        .post(
-          "http://localhost:3000/task/todopage",
-          {
-            task: task.current.value,
-            description: description.current.value,
-            duration: duration.current.value,
-            email: email.current.value,
+      const response = await Todocreate(
+        {
+          task: task.current.value,
+          description: description.current.value,
+          duration: duration.current.value,
+          email: email.current.value,
+        },
+        {
+          headers: {
+            authorization: `${Token}`,
           },
-          {
-            headers: {
-              authorization: `${Token}`,
-            },
-          }
-        )
+        }
+      )
         .then((response) => {
           console.log(response, "hhhhhh");
-          alert("Todo Data Add successfully");
+          toast.success("Todo Data Add successfully");
           todo();
           //   setdata(response, { task, description, duration, email });
           //   console.log(data,"=============");
@@ -144,12 +162,11 @@ function ToDoList() {
     if (id) {
       // confirm("ToDo Data Delete successfully ");
       try {
-        let response = await axios
-          .delete(`http://localhost:3000/task/todopage/${id}`, {
-            headers: {
-              authorization: `${Token}`,
-            },
-          })
+        let response = await TodoDelete(id, {
+          headers: {
+            authorization: `${Token}`,
+          },
+        })
           .then((response) => {
             console.log(response, "hhhhhh");
             todo();
@@ -165,12 +182,11 @@ function ToDoList() {
 
   const showTodo = async (id) => {
     try {
-      const response = await axios
-        .get(`http://localhost:3000/task/todo/${id}`, {
-          headers: {
-            authorization: `${Token}`,
-          },
-        })
+      const response = await Todogetbyid(id, {
+        headers: {
+          authorization: `${Token}`,
+        },
+      })
         .then((response) => {
           console.log(response, "response");
           settasks(response.data.todoAllData[0].task);
@@ -189,46 +205,48 @@ function ToDoList() {
       console.log(err.message);
     }
   };
-    const updatetodo = async () => {
-      try {
-        let response = await axios
-          .put(
-            `http://localhost:3000/task/todo_update/${Todoid}`,
-            {
-              task: task.current.value,
-              description: description.current.value,
-              duration: duration.current.value,
-              email: email.current.value,
-            },
-            {
-              headers: {
-                authorization: `${Token}`,
-              },
-            }
-          )
-          .then((response) => {
-            console.log(response, "hhhhhh");
+  const updatetodo = async () => {
+    try {
+      let response = await Todoput(
+        Todoid,
+        {
+          task: task.current.value,
+          description: description.current.value,
+          duration: duration.current.value,
+          email: email.current.value,
+        },
+        {
+          headers: {
+            authorization: `${Token}`,
+          },
+        }
+      )
+        .then((response) => {
+          console.log(response, "hhhhhh");
 
-            // todo()
-          })
-          .catch((error) => {
-            console.log(error, "catch error");
-          });
-      } catch (err) {
-        console.log(err.message, "error");
-      }
-    };
-  //   function clearfeild(e){
-  //     e.preventDefault();
-  //     setDes("")
-  //     setDuration("")
-  //     settask("")
-  //     setemailerr("")
-
-  //   }
+          // todo()
+        })
+        .catch((error) => {
+          console.log(error, "catch error");
+        });
+    } catch (err) {
+      console.log(err.message, "error");
+    }
+  };
+  function clearfeild(e) {
+    e.preventDefault();
+    setusername("");
+    setdur("");
+    setdesc("");
+    settasks("");
+  }
 
   return (
     <>
+      <Link to="/task/todo_update/:id">
+        {" "}
+        <button className="another">Add</button>
+      </Link>
       <div className="container-todo">
         <div className="form-container-todo">
           <h2>To Do List</h2>
@@ -239,8 +257,8 @@ function ToDoList() {
                   ref={task}
                   type="text"
                   placeholder="enter task"
-                  defaultValue={tasks}
-                  onChange={(e) => settasks(e.target.value)}
+                  value={tasks}
+                  onChange={(e) => taskHandle(settasks(e.target.value))}
                   required
                 ></input>
                 {taskErr ? (
@@ -255,8 +273,8 @@ function ToDoList() {
                   ref={description}
                   type="text"
                   placeholder="enter description"
-                  defaultValue={desc}
-                  onChange={(e) => setdesc(e.target.value)}
+                  value={desc}
+                  onChange={(e) => DescHandle(setdesc(e.target.value))}
                   required
                 ></input>
                 {descErr ? (
@@ -272,13 +290,13 @@ function ToDoList() {
                   ref={duration}
                   type="text"
                   placeholder="enter duration"
-                  defaultValue={dur}
-                  onChange={(e) => setdur(e.target.value)}
+                  value={dur}
+                  onChange={(e) => DurHandle(setdur(e.target.value))}
                   required
                 ></input>
                 {durErr ? (
                   <span>
-                    enter duration only alphabet and more than 5 length
+                    enter duration only alphabet and more than 7 length
                   </span>
                 ) : (
                   ""
@@ -289,30 +307,33 @@ function ToDoList() {
                   ref={email}
                   type="email"
                   placeholder="enter email"
-                  defaultValue={username}
-                  onChange={(e) => setusername(e.target.value)}
+                  value={username}
+                  onChange={(e) => emailHandle(setusername(e.target.value))}
                   required
                 ></input>
                 {emailerr ? <span>enter valid email format</span> : ""}
               </div>
             </div>
-            <div className="buttonstyle">
-              {status ? (
-                <button onClick={updatetodo}>Edit</button>
-              ) : (
-                <button onClick={formsubmit}>Add</button>
-              )}
-              <button>clear</button>
-              {/* <button onClick={updatetodo}>Update</button> */}
-            </div>
-            {/* <div> <select name="">
-                            <option>Update</option>
-                            <option>Another update</option>
-                        </select></div> */}
+            {hideButton ? (
+              <div className="buttonstyle">
+                {status ? (
+                  <button
+                    onClick={() => {
+                      if (window.confirm("ToDo Data upadte successfully")) {
+                        updatetodo();
+                      }
+                    }}
+                  >
+                    Edit
+                  </button>
+                ) : (
+                  <button onClick={formsubmit}>Add</button>
+                )}
+                <button onClick={clearfeild}>clear</button>
+              </div>
+            ) : null}
           </form>
         </div>
-        {/* <button onClick={deletetodo}>delete</button> */}
-        {/* <button onClick={getalldata}>get data</button> */}
       </div>
       <div className="container-table">
         <div>
@@ -374,6 +395,7 @@ function ToDoList() {
             </tbody>
           </table>
         </div>
+        <ToastContainer />
       </div>
     </>
   );

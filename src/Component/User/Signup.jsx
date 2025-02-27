@@ -3,11 +3,12 @@ import { MdOutlineMail } from "react-icons/md";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import validator from "validator";
 import { Link } from "react-router-dom";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
-// import signupRoute from '../../api/user/index.js'
+import { signupRoute } from "../../api/user";
 
 // import { NavLink } from "react-router-dom";
 import Navigation from "./navbar";
@@ -25,19 +26,25 @@ function Signup() {
     try {
       console.log("username:", userref.current.value);
       console.log("password:", passref.current.value);
-      let response = await axios
-        .post("http://localhost:3000/user/signup", {
-          email: userref.current.value,
-          password: passref.current.value,
-        })
+      let response = await signupRoute({
+        email: userref.current.value,
+        password: passref.current.value,
+      })
         .then((response) => {
           console.log(response, "hhhhhh");
-          navigate("/user/login");
+          toast.success("signup successfully");
+          setTimeout(() => {
+            navigate("/user/login");
+          }, 6000);
         })
         .catch((error) => {
           console.log(error, "catch error");
+          if (error.status == 400) {
+            toast.error("User Already Exists!");
+            // navigate("/user/login");
+          }
         });
-      // console.log("..........", response);
+      console.log("..........", response);
     } catch (err) {
       console.log(err.message, "error");
     }
@@ -75,7 +82,7 @@ function Signup() {
           <div className="form-control">
             <input
               ref={userref}
-              type="text"
+              type="email"
               placeholder="enter your email"
               onChange={emailHandle}
               required
@@ -99,6 +106,17 @@ function Signup() {
             {passerr ? <span>please enter the 6 character password</span> : ""}
             <RiLockPasswordLine className="icon password"></RiLockPasswordLine>
           </div>
+          {/* <div className="form-control">
+            <input type="text" placeholder="confirm  password" required onChange={passHandle}></input>
+            {show ? (
+              <BiShow className="icon1 hide" onClick={showpassword}></BiShow>
+            ) : (
+              <BiHide className="icon1 hide" onClick={showpassword}></BiHide>
+            )}
+            {passerr ? <span>please enter the 6 character password</span> : ""}
+            <RiLockPasswordLine className="icon password"></RiLockPasswordLine>
+          </div> */}
+          
           <div className="buttonstyle">
             <button>SignUp</button>
           </div>
@@ -108,6 +126,7 @@ function Signup() {
           <Link to="/user/login">Already have an account?</Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 }

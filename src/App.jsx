@@ -7,7 +7,8 @@ import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import Signup from './Component/User/Signup';
-import Login from './Component/User/login';
+// import Login from './Component/User/login';
+import Login from './Component/User/Login';
 import Navigation from './Component/User/navbar';
 import ToDoList from './Component/ToDoList/ToDo';
 // import TodoAdd from './Component/ToDoList/TodoAdd';

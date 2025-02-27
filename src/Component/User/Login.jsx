@@ -7,8 +7,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
+import { ToastContainer, toast } from "react-toastify";
+
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoginRoute } from "../../api/user";
 
 // import Signup from "./Signup";
 // import { useNavigate } from "react-router-dom";
@@ -26,24 +29,28 @@ function Login() {
     console.log("username", emailref.current.value);
     console.log("password", passwordref.current.value);
     try {
-      let response = await axios
-        .post("http://localhost:3000/user/login", {
-          email: emailref.current.value,
-          password: passwordref.current.value,
-        })
+      let response = await LoginRoute({
+        email: emailref.current.value,
+        password: passwordref.current.value,
+      })
         .then((response) => {
           console.log(response, "hhhhhh");
-          alert("Login successfully");
           const token = response.data.token;
           console.log(token);
           const id = response.data.user.id;
           console.log(id, "token id ");
           localStorage.setItem("token", token);
           localStorage.setItem("id", id);
-          navigate("/task/todopage");
+          toast.success("Login successfully");
+          setTimeout(() => {
+            navigate("/task/todopage");
+          }, 6000);
         })
         .catch((error) => {
           console.log(error, "catch error");
+          if (error.status == 400) {
+            toast.error("User Not Found");
+          }
         });
       // console.log("..........", response);
     } catch (err) {
@@ -80,7 +87,7 @@ function Login() {
           <div className="form-control">
             <input
               ref={emailref}
-              type="text"
+              type="email"
               placeholder="enter your email"
               onChange={emailHandle}
               required
@@ -115,6 +122,7 @@ function Login() {
           <Link to={"/user/signup"}>Don't have account please signup</Link>
         </p>
       </div>
+      <ToastContainer />
     </div>
   );
 }

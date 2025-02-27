@@ -6,25 +6,25 @@ const USER_GET_URL = "user/users";
 const USER_PUT_URL = "user/user";
 const USER_DELETE_URL = "user/user";
 
-const signupRoute = (data) => {
+export const signupRoute = (data) => {
     console.log(data,)
   return instance.post(SIGNUP,data);
 };
 
-const LoginRoute = () => {
-  return instance.post(lOGIN);
+export const LoginRoute = (data) => {
+  return instance.post(lOGIN,data);
 };
 
-const User_get = () => {
+export const User_get = () => {
   return instance.get(USER_GET_URL);
 };
 
-const User_put = (data) => {
-  return instance.put(USER_PUT_URL, data);
+export const User_put = (id,data) => {
+  return instance.put(`${USER_PUT_URL}/${id}`, data);
 };
 
-const User_Logout = (data) => {
-  return instance.delete(USER_DELETE_URL,data);
+export const User_Logout = (id) => {
+  return instance.delete(`${USER_DELETE_URL}/${id}`);
 };
 
-export default { signupRoute, LoginRoute, User_get, User_put, User_Logout };
+export default {  User_Logout };
