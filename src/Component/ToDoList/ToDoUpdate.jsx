@@ -91,9 +91,9 @@ function ToDoUpdate() {
         .then((response) => {
           console.log(response, "hhhhhh");
           toast.success("ToDo Add successfully");
-          setTimeout(() => {
+          // setTimeout(() => {
             navigate("/task/todopage");
-          }, 3000);
+          // }, 3000);
           showTodo();
         })
         .catch((error) => {
@@ -124,9 +124,9 @@ function ToDoUpdate() {
         .then((response) => {
           console.log(response, "hhhhhh");
           toast.success("ToDo Update successfully");
-          setTimeout(() => {
+          // setTimeout(() => {
             navigate("/task/todopage");
-          }, 3000);
+          // }, 3000);
         })
         .catch((error) => {
           console.log(error, "catch error");

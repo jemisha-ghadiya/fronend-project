@@ -250,7 +250,7 @@ function ToDoList() {
       <div className="container-todo">
         <div className="form-container-todo">
           <h2>To Do List</h2>
-          <form>
+          <form onSubmit={formsubmit}>
             <div className="form-control-todo">
               <div>
                 <input
@@ -258,7 +258,7 @@ function ToDoList() {
                   type="text"
                   placeholder="enter task"
                   value={tasks}
-                  onChange={(e) => taskHandle(settasks(e.target.value))}
+                  onChange={(e) => settasks(e.target.value)}
                   required
                 ></input>
                 {taskErr ? (
@@ -274,7 +274,7 @@ function ToDoList() {
                   type="text"
                   placeholder="enter description"
                   value={desc}
-                  onChange={(e) => DescHandle(setdesc(e.target.value))}
+                  onChange={(e) => setdesc(e.target.value)}
                   required
                 ></input>
                 {descErr ? (
@@ -291,7 +291,7 @@ function ToDoList() {
                   type="text"
                   placeholder="enter duration"
                   value={dur}
-                  onChange={(e) => DurHandle(setdur(e.target.value))}
+                  onChange={(e) => setdur(e.target.value)}
                   required
                 ></input>
                 {durErr ? (
@@ -308,7 +308,7 @@ function ToDoList() {
                   type="email"
                   placeholder="enter email"
                   value={username}
-                  onChange={(e) => emailHandle(setusername(e.target.value))}
+                  onChange={(e) => setusername(e.target.value)}
                   required
                 ></input>
                 {emailerr ? <span>enter valid email format</span> : ""}
@@ -327,11 +327,12 @@ function ToDoList() {
                     Edit
                   </button>
                 ) : (
-                  <button onClick={formsubmit}>Add</button>
+                  <button >Add</button>
                 )}
                 <button onClick={clearfeild}>clear</button>
               </div>
             ) : null}
+            
           </form>
         </div>
       </div>
@@ -357,7 +358,7 @@ function ToDoList() {
 
                 return (
                   <tr key={index}>
-                    <td>{index + 1}</td>
+                    <td>{todo.id}</td>
                     <td>{todo.task}</td>
                     <td>{todo.description}</td>
                     <td>{todo.duration}</td>

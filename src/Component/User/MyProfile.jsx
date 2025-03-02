@@ -98,10 +98,10 @@ useralldata()
           toast.success("User Logout successfully",{
             autoClose : 2000
           })
-          setTimeout(() => {
+          // setTimeout(() => {
             navigate("/user/login");
             
-          }, 3000);
+          // }, 3000);
         })
         .catch((error) => {
           console.log(error, "catch error");

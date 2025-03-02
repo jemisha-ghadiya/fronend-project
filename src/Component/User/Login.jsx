@@ -42,9 +42,9 @@ function Login() {
           localStorage.setItem("token", token);
           localStorage.setItem("id", id);
           toast.success("Login successfully");
-          setTimeout(() => {
+          // setTimeout(() => {
             navigate("/task/todopage");
-          }, 6000);
+          // }, 6000);
         })
         .catch((error) => {
           console.log(error, "catch error");
