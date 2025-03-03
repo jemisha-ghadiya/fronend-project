@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { Todocreate } from "../../api/todo";
 import { Todoputbyid } from "../../api/todo";
 import { Todogetbyid } from "../../api/todo";
+import { toastmessage } from "../../utils/Toast";
 
 function ToDoUpdate() {
   const { id } = useParams();
@@ -23,12 +24,20 @@ function ToDoUpdate() {
   const [username, setusername] = useState("");
   const [status, setstatus] = useState(false);
   const [Hide, setHide] = useState(false);
+  const[validate,setvalidate]=useState(false);
 
   let task = useRef();
   let description = useRef();
   let duration = useRef();
   let email = useRef();
   let Token = localStorage.getItem("token");
+
+
+  useEffect(()=>{
+    if(!Token){
+      navigate("/user/login")
+    }
+  })
 
   const showTodo = async () => {
     try {
@@ -74,33 +83,38 @@ function ToDoUpdate() {
 
   const AddTodo = async (e) => {
     e.preventDefault();
-    try {
-      const response = await Todocreate(
-        {
-          task: task.current.value,
-          description: description.current.value,
-          duration: duration.current.value,
-          email: email.current.value,
-        },
-        {
-          headers: {
-            authorization: `${Token}`,
+    if (!validator.isEmail(email.current.value) || description.current.value.length < 5 || duration.current.value.length < 7 ||task.current.value.length < 5) {
+          setvalidate(true);
+    }
+    else{
+      try {
+        const response = await Todocreate(
+          {
+            task: task.current.value,
+            description: description.current.value,
+            duration: duration.current.value,
+            email: email.current.value,
           },
-        }
-      )
-        .then((response) => {
-          console.log(response, "hhhhhh");
-          toast.success("ToDo Add successfully");
-          // setTimeout(() => {
-            navigate("/task/todopage");
-          // }, 3000);
-          showTodo();
-        })
-        .catch((error) => {
-          console.log(error, "catch error");
-        });
-    } catch (err) {
-      console.log(err.message, "error");
+          {
+            headers: {
+              authorization: `${Token}`,
+            },
+          }
+        )
+          .then((response) => {
+            console.log(response, "hhhhhh");
+        toastmessage("success","ToDo Add successfully");
+            // setTimeout(() => {
+              navigate("/task/todopage");
+            // }, 3000);
+            showTodo();
+          })
+          .catch((error) => {
+            console.log(error, "catch error");
+          });
+      } catch (err) {
+        console.log(err.message, "error");
+      }
     }
   };
 
@@ -123,7 +137,7 @@ function ToDoUpdate() {
       )
         .then((response) => {
           console.log(response, "hhhhhh");
-          toast.success("ToDo Update successfully");
+          toastmessage("success","ToDo Update successfully");
           // setTimeout(() => {
             navigate("/task/todopage");
           // }, 3000);
@@ -139,16 +153,20 @@ function ToDoUpdate() {
   function emailHandle() {
     if (!validator.isEmail(email.current.value)) {
       setemailerr(true);
+      setvalidate(false)
     } else {
       setemailerr(false);
+      setvalidate(false)
     }
   }
   function taskHandle() {
     var letters = /^[A-Za-z]+$/;
     if (task.current.value.length < 5 && task.current.value.match(letters)) {
       settask(true);
+      setvalidate(false)
     } else {
       settask(false);
+      setvalidate(false)
     }
   }
   function DescHandle() {
@@ -158,8 +176,10 @@ function ToDoUpdate() {
       description.current.value.match(letters)
     ) {
       setDes(true);
+      setvalidate(false)
     } else {
       setDes(false);
+      setvalidate(false)
     }
   }
   function DurHandle() {
@@ -169,8 +189,10 @@ function ToDoUpdate() {
       duration.current.value.match(letters)
     ) {
       setDuration(true);
+      setvalidate(false)
     } else {
       setDuration(false);
+      setvalidate(false)
     }
   }
 
@@ -251,7 +273,7 @@ function ToDoUpdate() {
                 {emailerr ? <span>enter valid email format</span> : ""}
               </div>
             </div>
-
+            {validate?<span>All fields are Required *</span>:""}
             {Hide ? (
               <div className="buttonstyle">
                 {status ? (

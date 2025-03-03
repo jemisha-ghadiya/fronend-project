@@ -9,7 +9,9 @@ import { Link } from "react-router-dom";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
 import { signupRoute } from "../../api/user";
-
+// import { handlesucess } from "../../utils/Toast";
+// import { handleerror } from "../../utils/Toast";
+import { toastmessage } from "../../utils/Toast";
 // import { NavLink } from "react-router-dom";
 import Navigation from "./navbar";
 import { useRef } from "react";
@@ -26,6 +28,10 @@ function Signup() {
 
   const formsubmit = async (e) => {
     e.preventDefault();
+    if(passref.current.value !== cpassref.current.value){
+      toastmessage("error","password and confirm password not match")
+    }
+   else{
     try {
       console.log("username:", userref.current.value);
       console.log("password:", passref.current.value);
@@ -35,7 +41,7 @@ function Signup() {
       })
         .then((response) => {
           console.log(response, "hhhhhh");
-          toast.success("signup successfully");
+          toastmessage("success","signup successfully");
           // setTimeout(() => {
             navigate("/user/login");
           // }, 6000);
@@ -43,7 +49,7 @@ function Signup() {
         .catch((error) => {
           console.log(error, "catch error");
           if (error.status == 400) {
-            toast.error("User Already Exists!");
+            toastmessage("error","User Already Exists!");
             // navigate("/user/login");
           }
         });
@@ -51,6 +57,7 @@ function Signup() {
     } catch (err) {
       console.log(err.message, "error");
     }
+   }
   };
   function emailHandle() {
     if (!validator.isEmail(userref.current.value)) {
@@ -68,13 +75,17 @@ function Signup() {
   }
   function cpassHandle() {
     if (passref.current.value !== cpassref.current.value) {
-      //  toast.error("password not match")
       setcpass(true);
     } else {
       setcpass(false);
-      // toast.success("password and confirm password match")
     }   
   }
+
+  // function confirmpassword(){
+  //   if (passref.current.value === cpassref.current.value){
+  //     navigate("/user/login")
+  //   }
+  // }
 
   function showpassword() {
     if (Icon == true) {
@@ -152,7 +163,7 @@ function Signup() {
           </div>
 
           <div className="buttonstyle">
-            <button>SignUp</button>
+            <button >SignUp</button>
           </div>
           {/* onClick={()=>navigate('/login')} */}
         </form>

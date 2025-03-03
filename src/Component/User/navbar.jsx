@@ -8,6 +8,7 @@ import axios from "axios";
 import "./navbar.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { toastmessage } from "../../utils/Toast";
 // let id = localStorage.getItem("id");
 
 function Navigation() {
@@ -36,15 +37,12 @@ function Navigation() {
   const HandleLogout = () => {
     if (Token) {
       localStorage.clear();
-      toast.success("User Logout Successfully");
-      // setTimeout(() => {
-        navigate("/");
-      // }, 3000);
-    } else {
-      toast.error("plase first login");
-      navigate("/");
-    }
-    <ToastContainer></ToastContainer>
+      toastmessage("success","User Logout Successfully");
+      setTimeout(() => {
+        navigate("/user/login");
+        }, 1000);
+      } 
+      <ToastContainer></ToastContainer>
   };
 
   return (

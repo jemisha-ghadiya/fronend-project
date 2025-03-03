@@ -12,7 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoginRoute } from "../../api/user";
-
+import {  toastmessage } from "../../utils/Toast";
 // import Signup from "./Signup";
 // import { useNavigate } from "react-router-dom";
 import "./Signup.css";
@@ -41,7 +41,7 @@ function Login() {
           console.log(id, "token id ");
           localStorage.setItem("token", token);
           localStorage.setItem("id", id);
-          toast.success("Login successfully");
+          toastmessage("success","Login successfully");
           // setTimeout(() => {
             navigate("/task/todopage");
           // }, 6000);

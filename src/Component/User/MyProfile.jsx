@@ -11,17 +11,19 @@ import "./MyProfile.css";
 import { User_get } from "../../api/user";
 import { User_put } from "../../api/user";
 import { User_Logout } from "../../api/user";
-
-let Token = localStorage.getItem("token");
+import { handleerror } from "../../utils/Toast";
+import { handlesucess } from "../../utils/Toast";
+import { toastmessage } from "../../utils/Toast";
 // console.log("Token----------", Token);
 
 function Myprofile() {
+  let Token = localStorage.getItem("token");
   let userref = useRef(null);
   const navigate = useNavigate();
   const [emailerr, setemailerr] = useState(false);
   const[email,setemail]=useState("")
-
-
+  
+  
   const useralldata =async()=>{
     let response = await User_get( {
       headers: {
@@ -40,11 +42,17 @@ function Myprofile() {
     .catch((error) => {
       console.log(error, "catch error");
     });
-   }
-
-useEffect(()=>{
-useralldata()
-},[])
+  }
+  
+  useEffect(()=>{
+    useralldata()
+  },[])
+  
+  useEffect(()=>{
+    if(!Token){
+      navigate('/user/login')
+    }
+  },[])
 
   const formsubmit = async (e) => {
     e.preventDefault();
@@ -65,7 +73,7 @@ useralldata()
         )
         .then((response) => {
           console.log(response, "hhhhhh");
-          toast.success("user data update successfully")
+          toastmessage("success","user data update successfully")
           // alert("user data update successfully")
         //   navigate("/home");
         })
@@ -95,9 +103,7 @@ useralldata()
         })
         .then((response) => {
           console.log(response, "hhhhhh");
-          toast.success("User Logout successfully",{
-            autoClose : 2000
-          })
+          toastmessage("success","User Logout successfully")
           // setTimeout(() => {
             navigate("/user/login");
             
@@ -106,7 +112,7 @@ useralldata()
         .catch((error) => {
           console.log(error, "catch error");
           if(error.status==500){
-            toast.error("Todo already exists so user not delete your self");
+            toastmessage("error","Todo already exists so user not delete your self");
           }
         });
     } catch (err) {
