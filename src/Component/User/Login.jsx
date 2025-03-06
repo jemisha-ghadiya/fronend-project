@@ -8,13 +8,12 @@ import { Link } from "react-router-dom";
 import { BiHide } from "react-icons/bi";
 import { BiShow } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";
-
+import Input from "../ReusableComponent/Input";
+import Button from "../ReusableComponent/Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { LoginRoute } from "../../api/user";
-import {  toastmessage } from "../../utils/Toast";
-// import Signup from "./Signup";
-// import { useNavigate } from "react-router-dom";
+import { toastmessage } from "../../utils/Toast";
 import "./Signup.css";
 function Login() {
   const [Icon, setIcon] = useState(false);
@@ -41,9 +40,9 @@ function Login() {
           console.log(id, "token id ");
           localStorage.setItem("token", token);
           localStorage.setItem("id", id);
-          toastmessage("success","Login successfully");
+          toastmessage("success", "Login successfully");
           // setTimeout(() => {
-            navigate("/task/todopage");
+          navigate("/task/todopage");
           // }, 6000);
         })
         .catch((error) => {
@@ -52,7 +51,6 @@ function Login() {
             toast.error("User Not Found");
           }
         });
-      // console.log("..........", response);
     } catch (err) {
       console.log(err.message, "error");
     }
@@ -84,41 +82,45 @@ function Login() {
       <div className="form-container">
         <h2>Login</h2>
         <form onSubmit={formsubmit}>
-          <div className="form-control">
-            <input
-              ref={emailref}
-              type="email"
-              placeholder="enter your email"
-              onChange={emailHandle}
-              required
-            />
-            {emailErr ? <span>enter valid email format</span> : ""}
+          {/* <div className="form-control"> */}
+          <Input
+            className={"form-control"}
+            ref={emailref}
+            type="email"
+            placeholder="enter your email"
+            onChange={emailHandle}
+            errorMassage={emailErr ? <span>enter valid email format</span> : ""}
+            icon={<MdOutlineMail className="icon email"></MdOutlineMail>}
+          />
+          {/* </div> */}
+          {/* <div className="form-control"> */}
+          <Input
+            className={"form-control"}
+            ref={passwordref}
+            type={show ? "text" : "password"}
+            placeholder="enter your password"
+            onChange={passwordHandle}
+            icon={
+              show ? (
+                <BiShow className="icon1 hide" onClick={showpassword}></BiShow>
+              ) : (
+                <BiHide className="icon1 hide" onClick={showpassword}></BiHide>
+              )
+            }
+            errorMassage={
+              passErr ? <span>please enter the 6 character password</span> : ""
+            }
+            fieldicon={
+              <RiLockPasswordLine className="icon password"></RiLockPasswordLine>
+            }
+          />
 
-            <MdOutlineMail className="icon email"></MdOutlineMail>
-          </div>
-          <div className="form-control">
-            <input
-              ref={passwordref}
-              type={show ? "text" : "password"}
-              placeholder="enter your password"
-              onChange={passwordHandle}
-              required
-            />
-            {show ? (
-              <BiShow className="icon1 hide" onClick={showpassword}></BiShow>
-            ) : (
-              <BiHide className="icon1 hide" onClick={showpassword}></BiHide>
-            )}
-            {passErr ? <span>please enter the 6 character password</span> : ""}
-            <RiLockPasswordLine className="icon password"></RiLockPasswordLine>
-          </div>
-          <div className="buttonstyle">
-            {" "}
-            <button>Login</button>
-          </div>
+          {/* </div> */}
+          {/* <div className="buttonstyle"> */}
+          <Button Name={"Login"} className={"buttonstyle"}></Button>
+          {/* </div> */}
         </form>
         <p>
-          {" "}
           <Link to={"/user/signup"}>Don't have account please signup</Link>
         </p>
       </div>

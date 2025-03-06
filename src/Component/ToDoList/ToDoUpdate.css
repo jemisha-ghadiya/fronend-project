@@ -77,6 +77,8 @@
   .buttonstyle {
     display: flex;
     justify-content: center;
+    
+    
   }
   /* .b1{
       width: 20%;
@@ -89,6 +91,7 @@
       margin-top: 1rem;
       font-size: 1.2rem;
   } */
+
   form button:active {
     transform: scale(0.98);
   }

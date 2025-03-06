@@ -16,13 +16,13 @@ import { TodoDelete } from "../../api/todo";
 import { Todoput } from "../../api/todo";
 import { Todogetbyid } from "../../api/todo";
 import { toastmessage } from "../../utils/Toast";
+import Input from "../ReusableComponent/Input";
 import { SlOptionsVertical } from "react-icons/sl";
-// console.log("Token----------", Token);
-// let id = localStorage.getItem("id");
+import Button from "../ReusableComponent/Button";
+import TodoForm from "../ReusableComponent/TodoForm";
 
 function ToDoList() {
   let Token = localStorage.getItem("token");
-  // const { id } = useParams();
   let navigate = useNavigate();
   const [emailerr, setemailerr] = useState(false);
   const [descErr, setDes] = useState(false);
@@ -94,14 +94,18 @@ function ToDoList() {
 
   const formsubmit = async (e) => {
     e.preventDefault();
-    if (!validator.isEmail(email.current.value) || description.current.value.length < 5 || duration.current.value.length < 7 ||task.current.value.length < 5) {
+    if (
+      !validator.isEmail(email.current.value) ||
+      description.current.value.length < 5 ||
+      duration.current.value.length < 7 ||
+      task.current.value.length < 5
+    ) {
       setvalidate(true);
     } else {
       try {
         //   let id = localStorage.getItem("id");
         //   console.log(id, "token id");
         //   console.log("token----------------", Token);
-
         const response = await Todocreate(
           {
             task: task.current.value,
@@ -117,7 +121,7 @@ function ToDoList() {
         )
           .then((response) => {
             console.log(response, "hhhhhh");
-            toastmessage("success","Todo Data Add successfully");
+            toastmessage("success", "Todo Data Add successfully");
             todo();
             //   setdata(response, { task, description, duration, email });
             //   console.log(data,"=============");
@@ -135,20 +139,20 @@ function ToDoList() {
   function emailHandle() {
     if (!validator.isEmail(email.current.value)) {
       setemailerr(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setemailerr(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function taskHandle() {
     var letters = /^[A-Za-z]+$/;
     if (task.current.value.length < 5 && task.current.value.match(letters)) {
       settask(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       settask(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function DescHandle() {
@@ -158,10 +162,10 @@ function ToDoList() {
       description.current.value.match(letters)
     ) {
       setDes(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setDes(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function DurHandle() {
@@ -171,16 +175,15 @@ function ToDoList() {
       duration.current.value.match(letters)
     ) {
       setDuration(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setDuration(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
 
   const deletetodo = async (id) => {
     if (id) {
-      // confirm("ToDo Data Delete successfully ");
       try {
         let response = await TodoDelete(id, {
           headers: {
@@ -265,97 +268,43 @@ function ToDoList() {
     <>
       <Link to="/task/todo_update/:id">
         {" "}
-        <button className="another">Add</button>
-      </Link>
-      <div className="container-todo">
-        <div className="form-container-todo">
-          <h2>To Do List</h2>
-          <form>
-            <div className="form-control-todo">
-              <div>
-                <input
-                  ref={task}
-                  type="text"
-                  placeholder="enter task"
-                  value={tasks}
-                  onChange={(e) => taskHandle(settasks(e.target.value))}
-                  required
-                ></input>
-                {taskErr ? (
-                  <span>enter task only alphabet and more than 5 length</span>
-                ) : (
-                  ""
-                )}
-              </div>
-
-              <div>
-                <input
-                  ref={description}
-                  type="text"
-                  placeholder="enter description"
-                  value={desc}
-                  onChange={(e) => DescHandle(setdesc(e.target.value))}
-                  required
-                ></input>
-                {descErr ? (
-                  <span>
-                    enter description only alphabet and more than 5 length
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                <input
-                  ref={duration}
-                  type="text"
-                  placeholder="enter duration"
-                  value={dur}
-                  onChange={(e) => DurHandle(setdur(e.target.value))}
-                  required
-                ></input>
-                {durErr ? (
-                  <span>
-                    enter duration only alphabet and more than 7 length
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                <input
-                  ref={email}
-                  type="email"
-                  placeholder="enter email"
-                  value={username}
-                  onChange={(e) => emailHandle(setusername(e.target.value))}
-                  required
-                ></input>
-                {emailerr ? <span>enter valid email format</span> : ""}
-              </div>
-            </div>
-            {validate?<span>All fields are Required *</span>:""}
-            {hideButton ? (
-              <div className="buttonstyle">
-                {status ? (
-                  <button
-                    onClick={() => {
-                      if (window.confirm("ToDo Data upadte successfully")) {
-                        updatetodo();
-                      }
-                    }}
-                  >
-                    Edit
-                  </button>
-                ) : (
-                  <button onClick={formsubmit}>Add</button>
-                )}
-                <button onClick={clearfeild}>clear</button>
-              </div>
-            ) : null}
-          </form>
+        <div className="AddTodoButton">
+          <Button className="another" Name={"Add"} />
         </div>
-      </div>
+      </Link>
+      <TodoForm
+        task={task}
+        tasks={tasks}
+        taskHandle={taskHandle}
+        settasks={settasks}
+        taskErr={taskErr}
+        
+        description={description}
+        desc={desc}
+        DescHandle={DescHandle}
+        setdesc={setdesc}
+        descErr={descErr}
+        duration={duration}
+        dur={dur}
+        DurHandle={DurHandle}
+        setdur={setdur}
+        durErr={durErr}
+        email={email}
+        username={username}
+        emailHandle={emailHandle}
+        setusername={setusername}
+        emailerr={emailerr}
+        status={status}
+        validate={validate}
+        hideButton={hideButton}
+        clearfeild={clearfeild}
+        formsubmit={formsubmit}
+        onClick={() => {
+          if (window.confirm("ToDo Data upadte successfully")) {
+            updatetodo();
+          }
+        }}
+      />
       <div className="container-table">
         <div>
           <h2>Fetch data for API</h2>
@@ -384,31 +333,34 @@ function ToDoList() {
                     <td>{todo.duration}</td>
                     <td>{todo.username}</td>
                     <td>
-                      <button
-                        className="danger"
-                        onClick={() => {
-                          if (window.confirm("ToDo Data Delete successfully")) {
-                            deletetodo(todo.id);
-                          }
-                        }}
-                      >
-                        <RiDeleteBin5Fill />
-                      </button>
+                      <div>
+                        <Button
+                          className="danger"
+                          onClick={() => {
+                            if (
+                              window.confirm("ToDo Data Delete successfully")
+                            ) {
+                              deletetodo(todo.id);
+                            }
+                          }}
+                          Name={<RiDeleteBin5Fill />}
+                        />
+                      </div>
                     </td>
                     <td>
-                      <button
-                        style={{ borderRadius: "20px", padding: "5px" }}
-                        onClick={() => {
-                          showTodo(todo.id);
-                        }}
-                      >
-                        Edit
-                      </button>
-                      {/* <SlOptionsVertical></SlOptionsVertical> */}
-                      <Link to={`/task/todo_update/${todo.id}`}>
-                        {" "}
-                        <button className="edit"> Update</button>
-                      </Link>
+                      <div className="editbutton">
+                        <Button
+                          className="edit"
+                          onClick={() => {
+                            showTodo(todo.id);
+                          }}
+                          Name={"Edit"}
+                        />
+                        <Link to={`/task/todo_update/${todo.id}`}>
+                          {" "}
+                          <Button className="edit" Name={"Update"} />
+                        </Link>
+                      </div>
                     </td>
                   </tr>
                 );

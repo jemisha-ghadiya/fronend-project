@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-// import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
@@ -9,7 +8,7 @@ import "./navbar.css";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { toastmessage } from "../../utils/Toast";
-// let id = localStorage.getItem("id");
+
 
 function Navigation() {
   const navigate = useNavigate();

@@ -102,7 +102,7 @@ form button:active {
   font-family: "Times New Roman", Times, serif;
 }
 table {
-    width: 60rem;
+  width: 60rem;
   border: 1px solid black;
 }
 tr {
@@ -114,7 +114,7 @@ td {
   border: 1px solid black;
   margin: 0.2rem;
   padding: 0.5rem 2rem;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -122,23 +122,41 @@ td {
   padding: 1.5rem 0;
   text-align: center;
 }
-.danger{
-    background-color: red;
-    font-style: white;
-    padding: 5px;
-    border-radius: 20px;
+.danger {
+  background-color: red;
+  font-style: white;
+  padding: 5px ;
+  border-radius: 10px;
 }
-.edit{
-    font-style: white;
-    padding: 5px;
-    border-radius: 20px;
+.edit {
+  font-style: white;
+  padding: 5px;
+  border-radius: 20px;
+  margin: 4px;
+  background-color: blueviolet;
+  
 }
 
-.another{
-  margin-top: 1rem;
-  margin-left: 80rem;
+.AddTodoButton{
+  height: 30%;
+  width: 60%;
+  /* background-color: aqua; */
+  justify-content: end;
+  display: flex;
+  align-items: center;
+  margin: 0.9rem auto;
+}
+.editbutton{
+  display: flex;
+  justify-content: center;
+}
+.another {
+  /* margin-top: 1rem; */
+  margin-left: 20%;
   font-size: 1rem;
   background: slateblue;
   color: white;
   padding: 10px;
+  height: 20%;
+  width: 10%;
 }

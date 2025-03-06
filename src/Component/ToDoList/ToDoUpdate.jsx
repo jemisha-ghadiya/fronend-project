@@ -1,4 +1,3 @@
-// import {  } from "react";
 import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +9,9 @@ import { Todocreate } from "../../api/todo";
 import { Todoputbyid } from "../../api/todo";
 import { Todogetbyid } from "../../api/todo";
 import { toastmessage } from "../../utils/Toast";
+import Input from "../ReusableComponent/Input";
+import Button from "../ReusableComponent/Button";
+import TodoForm from "../ReusableComponent/TodoForm";
 
 function ToDoUpdate() {
   const { id } = useParams();
@@ -24,7 +26,7 @@ function ToDoUpdate() {
   const [username, setusername] = useState("");
   const [status, setstatus] = useState(false);
   const [Hide, setHide] = useState(false);
-  const[validate,setvalidate]=useState(false);
+  const [validate, setvalidate] = useState(false);
 
   let task = useRef();
   let description = useRef();
@@ -32,12 +34,11 @@ function ToDoUpdate() {
   let email = useRef();
   let Token = localStorage.getItem("token");
 
-
-  useEffect(()=>{
-    if(!Token){
-      navigate("/user/login")
+  useEffect(() => {
+    if (!Token) {
+      navigate("/user/login");
     }
-  })
+  });
 
   const showTodo = async () => {
     try {
@@ -69,7 +70,6 @@ function ToDoUpdate() {
   }, []);
 
   function ButtonhideHandle() {
-    // || desc == " " || dur == "" || username !== ""
     if (tasks || desc || dur || username) {
       setHide(true);
     } else {
@@ -83,10 +83,14 @@ function ToDoUpdate() {
 
   const AddTodo = async (e) => {
     e.preventDefault();
-    if (!validator.isEmail(email.current.value) || description.current.value.length < 5 || duration.current.value.length < 7 ||task.current.value.length < 5) {
-          setvalidate(true);
-    }
-    else{
+    if (
+      !validator.isEmail(email.current.value) ||
+      description.current.value.length < 5 ||
+      duration.current.value.length < 7 ||
+      task.current.value.length < 5
+    ) {
+      setvalidate(true);
+    } else {
       try {
         const response = await Todocreate(
           {
@@ -103,9 +107,9 @@ function ToDoUpdate() {
         )
           .then((response) => {
             console.log(response, "hhhhhh");
-        toastmessage("success","ToDo Add successfully");
+            toastmessage("success", "ToDo Add successfully");
             // setTimeout(() => {
-              navigate("/task/todopage");
+            navigate("/task/todopage");
             // }, 3000);
             showTodo();
           })
@@ -137,9 +141,9 @@ function ToDoUpdate() {
       )
         .then((response) => {
           console.log(response, "hhhhhh");
-          toastmessage("success","ToDo Update successfully");
+          toastmessage("success", "ToDo Update successfully");
           // setTimeout(() => {
-            navigate("/task/todopage");
+          navigate("/task/todopage");
           // }, 3000);
         })
         .catch((error) => {
@@ -153,20 +157,20 @@ function ToDoUpdate() {
   function emailHandle() {
     if (!validator.isEmail(email.current.value)) {
       setemailerr(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setemailerr(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function taskHandle() {
     var letters = /^[A-Za-z]+$/;
     if (task.current.value.length < 5 && task.current.value.match(letters)) {
       settask(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       settask(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function DescHandle() {
@@ -176,10 +180,10 @@ function ToDoUpdate() {
       description.current.value.match(letters)
     ) {
       setDes(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setDes(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
   function DurHandle() {
@@ -189,10 +193,10 @@ function ToDoUpdate() {
       duration.current.value.match(letters)
     ) {
       setDuration(true);
-      setvalidate(false)
+      setvalidate(false);
     } else {
       setDuration(false);
-      setvalidate(false)
+      setvalidate(false);
     }
   }
 
@@ -206,88 +210,35 @@ function ToDoUpdate() {
 
   return (
     <>
-      <div className="container-todo">
-        <div className="form-container-todo">
-          <h2>To Do List</h2>
-          <form>
-            <div className="form-control-todo">
-              <div>
-                <input
-                  ref={task}
-                  type="text"
-                  placeholder="enter task"
-                  onChange={(e) => taskHandle(settasks(e.target.value))}
-                  value={tasks}
-                  required
-                ></input>
-                {taskErr ? (
-                  <span>enter task only alphabet and more than 5 length</span>
-                ) : (
-                  ""
-                )}
-              </div>
-
-              <div>
-                <input
-                  ref={description}
-                  type="text"
-                  placeholder="enter description"
-                  value={desc}
-                  onChange={(e) => DescHandle(setdesc(e.target.value))}
-                  required
-                ></input>
-                {descErr ? (
-                  <span>
-                    enter description only alphabet and more than 5 length
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                <input
-                  ref={duration}
-                  type="text"
-                  placeholder="enter duration"
-                  value={dur}
-                  onChange={(e) => DurHandle(setdur(e.target.value))}
-                  required
-                ></input>
-                {durErr ? (
-                  <span>
-                    enter duration only alphabet and more than 7 length
-                  </span>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div>
-                <input
-                  ref={email}
-                  type="email"
-                  placeholder="enter email"
-                  value={username}
-                  onChange={(e) => emailHandle(setusername(e.target.value))}
-                  required
-                ></input>
-                {emailerr ? <span>enter valid email format</span> : ""}
-              </div>
-            </div>
-            {validate?<span>All fields are Required *</span>:""}
-            {Hide ? (
-              <div className="buttonstyle">
-                {status ? (
-                  <button onClick={updatetodo}>Update</button>
-                ) : (
-                  <button onClick={AddTodo}>Add</button>
-                )}
-                <button onClick={remove}>Clear</button>
-              </div>
-            ) : null}
-          </form>
-        </div>
-        <ToastContainer />
-      </div>
+      <TodoForm
+        task={task}
+        tasks={tasks}
+        taskHandle={taskHandle}
+        settasks={settasks}
+        taskErr={taskErr}
+        description={description}
+        desc={desc}
+        DescHandle={DescHandle}
+        setdesc={setdesc}
+        descErr={descErr}
+        duration={duration}
+        dur={dur}
+        DurHandle={DurHandle}
+        setdur={setdur}
+        durErr={durErr}
+        email={email}
+        username={username}
+        emailHandle={emailHandle}
+        setusername={setusername}
+        emailerr={emailerr}
+        hideButton={Hide}
+        status={status}
+        validate={validate}
+        clearfeild={remove}
+        formsubmit={AddTodo}
+        onClick={updatetodo}
+      />
+      <ToastContainer />
     </>
   );
 }
