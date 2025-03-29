@@ -14,13 +14,16 @@ import { User_Logout } from "../../api/user";
 import { toastmessage } from "../../utils/Toast";
 import Button from "../ReusableComponent/Button";
 import Input from "../ReusableComponent/Input";
+import { IoCameraOutline } from "react-icons/io5";
 
 function Myprofile() {
   let Token = localStorage.getItem("token");
   let userref = useRef(null);
+  let profileref = useRef(null);
   const navigate = useNavigate();
   const [emailerr, setemailerr] = useState(false);
   const [email, setemail] = useState("");
+  const [image,setImage]=useState('')
 
   const useralldata = async () => {
     let response = await User_get({
@@ -58,10 +61,12 @@ function Myprofile() {
       // console.log("password:", passref.current.value);
       let id = localStorage.getItem("id");
       console.log(id, "token id");
+      
       let response = await User_put(
         id,
         {
           email: userref.current.value,
+          profile:profileref.current.value
         },
         {
           headers: {
@@ -119,10 +124,26 @@ function Myprofile() {
     }
   };
 
+  const handleProfile = () => {
+    profileref.current.click();
+  };
+
+  const handlechaneImage=(event)=>{
+    const file=event.target.files[0].name
+    console.log(file,"ggggggggggggggg");
+    
+    setImage(event.target.files[0])
+  }
+
   return (
     <div className="container-profile">
       <div className="form-container-profile">
         <h2>My Profile</h2>
+        <div className="form-container-profile-image" onClick={handleProfile}>
+          {image?<img src={URL.createObjectURL(image)}  style={{height:'80px', width:'90px',clipPath:'circle(50%)'}}></img>:<img src='https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' style={{height:'80px', width:'90px',clipPath:'circle(40%)'}}></img>}
+          <input type="file" ref={profileref} style={{ display: "none" }}  onChange={handlechaneImage}/>
+          {/* <IoCameraOutline className="cemera" /> */}
+        </div>
         <form onSubmit={formsubmit}>
           {/* <div className="form-control-profile"> */}
           <Input

@@ -25,7 +25,24 @@
   padding: 1rem 0;
   text-align: center;
 }
-
+.form-container-profile-image {
+  border: 3px solid black;
+  background-color: #ffffff;
+  height: 90px;
+  border-radius: 50%;
+  width: 100px;
+  margin-left: 150px;
+}
+.form-container-profile-image .cemera {
+margin-top: 55px;
+margin-left: 65px;
+font-size: 1.5rem;
+border-radius: 50%;
+clip-path: circle();
+}
+.form-container-profile-image .cemera:hover{
+background-color: gray;
+}
 .form-container-profile form {
   margin: 0.5rem 0;
 }
