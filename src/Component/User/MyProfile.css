@@ -26,23 +26,42 @@
   text-align: center;
 }
 .form-container-profile-image {
+  position: relative; /* Ensure the edit icon is positioned relative to the image */
   border: 3px solid black;
   background-color: #ffffff;
   height: 90px;
   border-radius: 50%;
   width: 100px;
-  margin-left: 150px;
+  margin: 0 auto; /* Center the image container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.form-container-profile-image .cemera {
-margin-top: 55px;
-margin-left: 65px;
-font-size: 1.5rem;
-border-radius: 50%;
-clip-path: circle();
+
+.edit-icon {
+  position: absolute; /* Position the icon relative to the image container */
+  bottom: 0; /* Place the icon at the bottom of the image */
+  right: 0; /* Place the icon at the right of the image */
+  background-color: #ffffff; /* White background for contrast */
+  border-radius: 50%; /* Make the icon circular */
+  padding: 8px; /* Add padding for better appearance */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  display: flex; /* Center the icon inside the circle */
+  align-items: center; /* Center the icon vertically */
+  justify-content: center; /* Center the icon horizontally */
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Smooth hover effect */
 }
-.form-container-profile-image .cemera:hover{
-background-color: gray;
+.edit-icon:hover {
+  transform: scale(1.1); /* Slightly enlarge the icon on hover */
+  background-color: #f0f0f0; /* Change background color on hover */
 }
+
+.edit-icon svg {
+  color: #555; /* Icon color */
+  font-size: 16px; /* Adjust the size of the icon */
+}
+
 .form-container-profile form {
   margin: 0.5rem 0;
 }
